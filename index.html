@@ -1,0 +1,1432 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" type="image/png" href="logo/FSGC-06.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Săptămâna Europeană · FSGC</title>
+  <style>
+    :root {
+      --ink: #10131a;
+      --muted: #687080;
+      --line: #d7dce5;
+      --paper: #f5f7fb;
+      --white: #fff;
+      --eu: #003399;
+      --gold: #ffcc00;
+      --steel: #27364a;
+      --aqua: #1f9fb8;
+      --green: #258a68;
+      --red: #bd3d35;
+      --shadow: 0 22px 70px rgba(16, 19, 26, .13);
+      --radius: 8px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background:
+        linear-gradient(90deg, rgba(0, 51, 153, .06) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(16, 19, 26, .05) 1px, transparent 1px),
+        var(--paper);
+      background-size: 56px 56px;
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    button, input { font: inherit; }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: minmax(260px, 340px) minmax(0, 1fr);
+    }
+
+    .rail {
+      background: #10131a;
+      color: var(--white);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .rail::before {
+      content: "";
+      position: absolute;
+      inset: auto -120px -120px auto;
+      width: 280px;
+      height: 280px;
+      background: conic-gradient(from 10deg, var(--gold), transparent 22%, var(--eu), transparent 61%, var(--gold));
+      opacity: .22;
+      border-radius: 50%;
+      filter: blur(2px);
+    }
+
+    .brand {
+      position: relative;
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      padding-bottom: 28px;
+      border-bottom: 1px solid rgba(255,255,255,.16);
+    }
+
+    .flag {
+      width: 72px;
+      height: 48px;
+      background: var(--eu);
+      border-radius: 4px;
+      position: relative;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.18);
+      flex: 0 0 auto;
+    }
+
+    .star {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 3px;
+      height: 3px;
+      background: var(--gold);
+      border-radius: 50%;
+      transform-origin: 0 0;
+      box-shadow: 0 0 0 1px rgba(255,204,0,.6);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.08;
+      letter-spacing: 0;
+      font-weight: 760;
+    }
+
+    .brand p {
+      margin: 6px 0 0;
+      font-size: 12px;
+      color: rgba(255,255,255,.66);
+    }
+
+    .event-logo-card {
+      position: relative;
+      margin: 18px 0 0;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.96);
+      border-radius: var(--radius);
+      padding: 10px;
+      box-shadow: 0 16px 36px rgba(0,0,0,.2);
+    }
+
+    .event-logo-card img {
+      display: block;
+      width: 100%;
+      max-height: 126px;
+      object-fit: contain;
+      border-radius: 5px;
+    }
+
+    .metric {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 28px 0;
+    }
+
+    .metric div {
+      border: 1px solid rgba(255,255,255,.14);
+      padding: 14px;
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.04);
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 26px;
+      line-height: 1;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 7px;
+      color: rgba(255,255,255,.62);
+      font-size: 12px;
+    }
+
+    .nav-title {
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      color: rgba(255,255,255,.7);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 12px;
+    }
+
+    .dots {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      gap: 7px;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+
+    .dot {
+      aspect-ratio: 1;
+      border: 1px solid rgba(255,255,255,.18);
+      color: rgba(255,255,255,.7);
+      background: rgba(255,255,255,.04);
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 11px;
+      transition: transform .16s ease, background .16s ease, border-color .16s ease;
+    }
+
+    .dot:hover { transform: translateY(-1px); border-color: rgba(255,255,255,.4); }
+    .dot.active { background: var(--gold); color: #171100; border-color: var(--gold); font-weight: 800; }
+    .dot.done { background: rgba(31,159,184,.28); border-color: rgba(31,159,184,.7); color: #dffaff; }
+
+    .rail-footer {
+      position: relative;
+      margin-top: auto;
+      padding-top: 22px;
+      color: rgba(255,255,255,.62);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    main {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      min-height: 74px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 18px 34px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(245,247,251,.88);
+      backdrop-filter: blur(16px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .kicker {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 13px;
+      min-width: 0;
+    }
+
+    .pulse {
+      width: 9px;
+      height: 9px;
+      background: var(--aqua);
+      border-radius: 50%;
+      box-shadow: 0 0 0 6px rgba(31,159,184,.13);
+      flex: 0 0 auto;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      border: 1px solid var(--line);
+      background: var(--white);
+      color: var(--ink);
+      border-radius: 6px;
+      min-height: 40px;
+      padding: 0 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease, background .16s ease;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(16,19,26,.08);
+      border-color: #aeb7c6;
+    }
+
+    .btn.primary {
+      background: var(--ink);
+      color: var(--white);
+      border-color: var(--ink);
+    }
+
+    .btn.eu {
+      background: var(--eu);
+      color: var(--white);
+      border-color: var(--eu);
+    }
+
+    .btn.icon {
+      width: 42px;
+      padding: 0;
+      font-size: 18px;
+    }
+
+    .stage {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      padding: 34px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .question-panel {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .question-head {
+      min-height: 170px;
+      padding: 30px;
+      background:
+        linear-gradient(135deg, rgba(0,51,153,.98), rgba(16,19,26,.96)),
+        radial-gradient(circle at 78% 20%, rgba(255,204,0,.38), transparent 22%);
+      color: var(--white);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .question-head::after {
+      content: "";
+      position: absolute;
+      right: -70px;
+      top: -90px;
+      width: 240px;
+      height: 240px;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 50%;
+      box-shadow: 0 0 0 34px rgba(255,255,255,.035), 0 0 0 68px rgba(255,204,0,.04);
+    }
+
+    .theme {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255,255,255,.72);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      position: relative;
+      z-index: 1;
+    }
+
+    .question-head h2 {
+      position: relative;
+      z-index: 1;
+      margin: 18px 0 0;
+      font-size: clamp(26px, 4vw, 46px);
+      line-height: 1.02;
+      letter-spacing: 0;
+      max-width: 850px;
+    }
+
+    .question-body {
+      padding: 26px 30px 30px;
+    }
+
+    .question-text {
+      margin: 0 0 22px;
+      font-size: clamp(20px, 2.4vw, 30px);
+      line-height: 1.18;
+      font-weight: 720;
+      letter-spacing: 0;
+    }
+
+    .answers {
+      display: grid;
+      gap: 12px;
+    }
+
+    .answer {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fbfcff;
+      text-align: left;
+      border-radius: var(--radius);
+      padding: 16px 16px 16px 58px;
+      min-height: 70px;
+      cursor: pointer;
+      position: relative;
+      transition: border-color .16s ease, background .16s ease, transform .16s ease, box-shadow .16s ease;
+      line-height: 1.35;
+    }
+
+    .answer:hover {
+      transform: translateY(-1px);
+      border-color: #aab4c4;
+      box-shadow: 0 10px 26px rgba(16,19,26,.07);
+    }
+
+    .answer .letter {
+      position: absolute;
+      left: 16px;
+      top: 16px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      border: 1px solid #c7ceda;
+      background: var(--white);
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .answer.correct {
+      border-color: rgba(37,138,104,.65);
+      background: rgba(37,138,104,.08);
+    }
+
+    .answer.wrong {
+      border-color: rgba(189,61,53,.58);
+      background: rgba(189,61,53,.07);
+    }
+
+    .answer.selected {
+      box-shadow: 0 0 0 3px rgba(0,51,153,.1);
+    }
+
+    .answer.correct .letter { background: var(--green); color: #fff; border-color: var(--green); }
+    .answer.wrong .letter { background: var(--red); color: #fff; border-color: var(--red); }
+
+    .explainer {
+      margin-top: 22px;
+      border-top: 1px solid var(--line);
+      padding-top: 20px;
+      display: none;
+    }
+
+    .explainer.show { display: block; }
+
+    .verdict {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-weight: 800;
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+
+    .verdict.good { color: #0e513b; background: rgba(37,138,104,.12); }
+    .verdict.bad { color: #75231d; background: rgba(189,61,53,.12); }
+
+    .explainer p {
+      margin: 0 0 12px;
+      color: #2d3440;
+      line-height: 1.58;
+    }
+
+    .wrong-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .wrong-note {
+      border-left: 3px solid #cbd3df;
+      padding: 8px 0 8px 12px;
+      color: #485262;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .side {
+      display: grid;
+      gap: 16px;
+    }
+
+    .card {
+      background: rgba(255,255,255,.88);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: 0 12px 34px rgba(16,19,26,.07);
+    }
+
+    .card h3 {
+      margin: 0 0 12px;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+    }
+
+    .score {
+      font-size: 52px;
+      line-height: .95;
+      letter-spacing: 0;
+      font-weight: 820;
+      margin: 4px 0 12px;
+    }
+
+    .progress-track {
+      height: 9px;
+      background: #e1e6ef;
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 15px 0 10px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--eu), var(--aqua), var(--gold));
+      border-radius: inherit;
+      transition: width .25s ease;
+    }
+
+    .signal {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 12px 0;
+      border-top: 1px solid var(--line);
+      color: #384252;
+      line-height: 1.45;
+      font-size: 14px;
+    }
+
+    .signal:first-of-type { border-top: 0; }
+
+    .signal b {
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      flex: 0 0 auto;
+      background: rgba(0,51,153,.1);
+      color: var(--eu);
+    }
+
+    .source {
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--muted);
+      word-break: break-word;
+    }
+
+    .bottom-nav {
+      display: flex;
+      gap: 12px;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 18px;
+    }
+
+    .results {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      background: rgba(16,19,26,.76);
+      backdrop-filter: blur(10px);
+      padding: 24px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .results.show { display: flex; }
+
+    .modal {
+      width: min(760px, 100%);
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .modal-head {
+      background: var(--ink);
+      color: var(--white);
+      padding: 28px;
+    }
+
+    .modal-head h2 {
+      margin: 0;
+      font-size: clamp(30px, 6vw, 58px);
+      line-height: .95;
+    }
+
+    .modal-body {
+      padding: 28px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .review-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+      gap: 8px;
+    }
+
+    .review-cell {
+      min-height: 42px;
+      border-radius: 5px;
+      border: 1px solid var(--line);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: #4c5667;
+      background: #f8faff;
+    }
+
+    .review-cell.good { color: #0e513b; background: rgba(37,138,104,.12); border-color: rgba(37,138,104,.32); }
+    .review-cell.bad { color: #75231d; background: rgba(189,61,53,.1); border-color: rgba(189,61,53,.28); }
+
+    @media (max-width: 980px) {
+      .app { grid-template-columns: 1fr; }
+      .rail {
+        position: relative;
+        height: auto;
+        padding: 22px;
+      }
+      .dots { grid-template-columns: repeat(9, minmax(28px, 1fr)); }
+      .rail-footer { display: none; }
+      .stage { grid-template-columns: 1fr; padding: 20px; }
+      .topbar { position: relative; padding: 16px 20px; align-items: flex-start; }
+    }
+
+    @media (max-width: 640px) {
+      .brand { align-items: flex-start; }
+      .metric { grid-template-columns: 1fr 1fr; }
+      .question-head, .question-body { padding: 22px; }
+      .question-head { min-height: 140px; }
+      .topbar { flex-direction: column; }
+      .actions { width: 100%; justify-content: stretch; }
+      .actions .btn { flex: 1; }
+      .btn.icon { flex: 0 0 42px; }
+      .bottom-nav { flex-direction: column; align-items: stretch; }
+      .bottom-nav .btn { width: 100%; }
+      .dots { grid-template-columns: repeat(9, 1fr); gap: 5px; }
+      .dot { font-size: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="rail">
+      <div class="brand">
+        <div class="flag" id="flag"></div>
+        <div>
+          <h1>Săptămâna Europeană · FSGC</h1>
+          <p>27 exerciții de gândire critică</p>
+        </div>
+      </div>
+
+      <div class="event-logo-card">
+        <img src="../assets/saptamana-europeana.png" alt="Săptămâna Europeană" />
+      </div>
+
+      <div class="metric">
+        <div>
+          <strong id="answeredCount">0</strong>
+          <span>răspunsuri date</span>
+        </div>
+        <div>
+          <strong id="correctCount">0</strong>
+          <span>corecte</span>
+        </div>
+      </div>
+
+      <div class="nav-title">
+        <span>Navigator</span>
+        <span id="questionIndex">01 / 27</span>
+      </div>
+      <div class="dots" id="dots"></div>
+
+
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div class="kicker">
+          <span class="pulse"></span>
+          <span id="topline">Quiz educațional pentru elevi de liceu</span>
+        </div>
+        <div class="actions">
+          <button class="btn icon" id="soundBtn" title="Sunet pornit/oprit" aria-label="Sunet pornit/oprit">♪</button>
+          <button class="btn" id="resetBtn">Reset</button>
+          <button class="btn eu" id="finishBtn">Rezultate</button>
+        </div>
+      </header>
+
+      <section class="stage">
+        <article class="question-panel">
+          <div class="question-head">
+            <div class="theme" id="themeLabel">01 · Definiții de bază</div>
+            <h2 id="headline">Fake news și Uniunea Europeană</h2>
+          </div>
+          <div class="question-body">
+            <p class="question-text" id="questionText"></p>
+            <div class="answers" id="answers"></div>
+            <div class="explainer" id="explainer">
+              <div class="verdict" id="verdict"></div>
+              <p id="correctExplanation"></p>
+              <div class="wrong-list" id="wrongList"></div>
+            </div>
+            <div class="bottom-nav">
+              <button class="btn" id="prevBtn">← Înapoi</button>
+              <button class="btn primary" id="nextBtn">Următoarea întrebare →</button>
+            </div>
+          </div>
+        </article>
+
+        <aside class="side">
+          <div class="card">
+            <h3>Scor curent</h3>
+            <div class="score"><span id="scorePercent">0</span>%</div>
+            <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+            <div class="source" id="scoreNote">Alege un răspuns pentru a vedea explicația.</div>
+          </div>
+
+          <div class="card">
+            <h3>Reflex de verificare</h3>
+            <div class="signal"><b>1</b><span>Cine este sursa și ce interes poate avea?</span></div>
+            <div class="signal"><b>2</b><span>Există dovadă, document original sau doar emoție?</span></div>
+            <div class="signal"><b>3</b><span>Afirmația descrie un fapt, o opinie sau o exagerare?</span></div>
+          </div>
+
+          <div class="card">
+            <h3>Bază factuală</h3>
+            <div class="source" id="sourceText"></div>
+          </div>
+        </aside>
+      </section>
+    </main>
+  </div>
+
+  <div class="results" id="results">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="resultsTitle">
+      <div class="modal-head">
+        <div class="theme">Raport de atelier</div>
+        <h2 id="resultsTitle">Rezultate</h2>
+      </div>
+      <div class="modal-body">
+        <p id="resultsCopy"></p>
+        <div class="review-grid" id="reviewGrid"></div>
+        <div class="bottom-nav">
+          <button class="btn" id="closeResults">Continuă quizul</button>
+          <button class="btn primary" id="restartFromResults">Reîncepe</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        theme: "Definiții de bază",
+        question: "Care este diferența esențială dintre dezinformare și informare greșită (misinformation)?",
+        answers: [
+          "Dezinformarea este falsă sau înșelătoare și este răspândită cu intenția de a manipula; informarea greșită poate fi distribuită fără intenție rea.",
+          "Informarea greșită este mereu ilegală, iar dezinformarea este doar o opinie politică.",
+          "Dezinformarea apare doar în campaniile electorale, nu și în sănătate, climă sau securitate.",
+          "Nu există nicio diferență; termenii sunt perfect identici."
+        ],
+        correct: 0,
+        explanation: "Comisia Europeană definește dezinformarea prin caracterul fals sau înșelător și intenția de a obține câștig politic ori economic sau de a produce prejudicii publice.",
+        wrong: [
+          "Nu orice conținut greșit este ilegal, iar dezinformarea nu este doar opinie.",
+          "Narațiunile dezinformatoare apar în sănătate, climă, migrație, securitate, energie și alegeri.",
+          "Diferența de intenție contează foarte mult în educația media."
+        ],
+        source: "Comisia Europeană - Tackling online disinformation; Parlamentul European - How to spot fake news."
+      },
+      {
+        theme: "Cenzură vs. reguli digitale",
+        question: "O postare virală spune: „Digital Services Act înseamnă că UE poate șterge orice opinie critică despre Bruxelles”. Care răspuns este cel mai corect?",
+        answers: [
+          "Fals: DSA introduce obligații de transparență, evaluare a riscurilor și moderare pentru conținut ilegal, nu o autorizație generală de cenzură politică.",
+          "Adevărat: orice critică la adresa UE devine ilegală automat.",
+          "Adevărat doar dacă postarea are peste 10.000 de distribuiri.",
+          "Fals, pentru că DSA se aplică doar ziarelor tipărite."
+        ],
+        correct: 0,
+        explanation: "DSA și Codul de conduită privind dezinformarea urmăresc transparența platformelor, limitarea riscurilor sistemice și protejarea libertății de exprimare.",
+        wrong: [
+          "Critica instituțiilor europene rămâne parte normală a dezbaterii democratice.",
+          "Legea nu funcționează pe un prag simplu de distribuiri.",
+          "DSA vizează servicii digitale și platforme online, nu presa tipărită ca atare."
+        ],
+        source: "Comisia Europeană - Digital Services Act; Code of Conduct on Disinformation."
+      },
+      {
+        theme: "Digital euro și cash",
+        question: "Care afirmație despre euro digital este corectă?",
+        answers: [
+          "Euro digital ar fi o formă suplimentară de bani publici digitali; nu înseamnă automat eliminarea numerarului.",
+          "Euro digital înseamnă că bancnotele și monedele vor fi confiscate peste noapte.",
+          "Euro digital va permite fiecărui comerciant să vadă toate cumpărăturile tale din UE.",
+          "Euro digital este o criptomonedă privată emisă de o companie americană."
+        ],
+        correct: 0,
+        explanation: "Proiectul euro digital este prezentat ca instrument complementar numerarului, nu ca abolire instantanee a acestuia.",
+        wrong: [
+          "Nu există o decizie UE de confiscare sau eliminare peste noapte a numerarului.",
+          "Dezbaterea oficială include protecții privind confidențialitatea și limitarea accesului la date.",
+          "Euro digital ar fi emis de Eurosistem/BCE, nu de o companie privată."
+        ],
+        source: "Banca Centrală Europeană - Digital euro; Comisia Europeană - pachetul privind moneda unică."
+      },
+      {
+        theme: "UE și războiul din Ucraina",
+        question: "O narațiune de dezinformare spune: „UE a provocat Rusia și este vinovată pentru invazia Ucrainei”. Care variantă răspunde corect?",
+        answers: [
+          "Fals: invazia este o decizie a Rusiei; UE susține suveranitatea și integritatea teritorială a Ucrainei în frontierele recunoscute internațional.",
+          "Adevărat: UE a declarat oficial război Rusiei înainte de 2022.",
+          "Adevărat: Ucraina era deja stat membru UE și a atacat Rusia prin instituțiile UE.",
+          "Fals, dar numai pentru că UE nu are nicio politică externă."
+        ],
+        correct: 0,
+        explanation: "Sursele UE și EEAS au demontat narațiunile care mută responsabilitatea agresiunii de la Rusia către UE, NATO sau Ucraina.",
+        wrong: [
+          "UE nu a declarat război Rusiei.",
+          "Ucraina nu era stat membru UE la momentul invaziei pe scară largă.",
+          "UE are instrumente de politică externă și sancțiuni."
+        ],
+        source: "EEAS / Comisia Europeană - Seven myths about Russia-Ukraine conflict."
+      },
+      {
+        theme: "Sancțiuni",
+        question: "Ce urmăresc în principal sancțiunile UE împotriva Rusiei?",
+        answers: [
+          "Să crească costul agresiunii, să reducă resursele folosite pentru război și să transmită un răspuns politic coordonat.",
+          "Să pedepsească cetățenii europeni și să interzică orice comerț din UE.",
+          "Să oblige toate statele membre să renunțe la monedele naționale.",
+          "Să închidă toate universitățile care predau limba rusă."
+        ],
+        correct: 0,
+        explanation: "Sancțiunile sunt instrumente de politică externă, direcționate către sectoare, entități și persoane asociate agresiunii.",
+        wrong: [
+          "Sancțiunile sunt țintite și nu înseamnă oprirea tuturor schimburilor economice posibile.",
+          "Sancțiunile nu au legătură cu adoptarea euro.",
+          "Nu există o politică UE de închidere a universităților pentru predarea limbii ruse."
+        ],
+        source: "Consiliul UE - EU restrictive measures in response to Russia; EUvsDisinfo."
+      },
+      {
+        theme: "Green Deal",
+        question: "Care afirmație despre Pactul verde european este corectă?",
+        answers: [
+          "Este o strategie de transformare economică și climatică, implementată prin acte legislative distincte, nu o singură lege care interzice viața de zi cu zi.",
+          "Este o lege secretă care interzice dușurile lungi și încălzirea locuințelor.",
+          "Este un program prin care UE obligă toate țările să renunțe la agricultură.",
+          "Este o campanie de marketing fără nicio legătură cu politici publice."
+        ],
+        correct: 0,
+        explanation: "Green Deal este un cadru de politici pentru neutralitate climatică, competitivitate și tranziție, nu o listă de interdicții absurde.",
+        wrong: [
+          "Interdicțiile caricaturale sunt tipice narațiunilor de tip „Bruxelles îți controlează viața”.",
+          "Agricultura rămâne sector central, cu politici de sprijin și tranziție.",
+          "Multe inițiative Green Deal sunt transpuse în regulamente, directive și programe de finanțare."
+        ],
+        source: "Comisia Europeană - European Green Deal; Climate disinformation."
+      },
+      {
+        theme: "Mașini electrice",
+        question: "O postare afirmă: „UE te obligă imediat să îți arunci mașina pe benzină și să cumperi electrică”. Ce e corect?",
+        answers: [
+          "Fals: politicile privind emisiile pentru autoturisme noi au termene și reguli pentru piața viitoare, nu confiscă mașinile existente ale cetățenilor.",
+          "Adevărat: toate mașinile pe combustie au devenit ilegale în UE din 2024.",
+          "Adevărat doar în orașele universitare.",
+          "Fals, pentru că UE nu are nicio politică de mediu."
+        ],
+        correct: 0,
+        explanation: "Regulile climatice sunt etapizate și vizează mai ales standardele pentru vehicule noi.",
+        wrong: [
+          "Mașinile existente nu au fost declarate automat ilegale.",
+          "Nu există o regulă UE specială pentru orașe universitare.",
+          "UE are o politică de mediu extinsă."
+        ],
+        source: "EDMO - EU Elections Disinfo Bulletin; Comisia Europeană - climate policy."
+      },
+      {
+        theme: "Reparații auto",
+        question: "Care este răspunsul corect la afirmația: „UE va interzice repararea mașinilor vechi”?",
+        answers: [
+          "Este o afirmație înșelătoare: narațiunea exagerează sau inventează efectele regulilor de mediu și siguranță.",
+          "Este complet adevărată: orice service auto devine ilegal.",
+          "Este adevărată doar pentru mașinile roșii.",
+          "Este falsă pentru că UE nu poate adopta deloc reguli tehnice."
+        ],
+        correct: 0,
+        explanation: "Norme tehnice sunt frecvent prezentate în dezinformare drept interdicții totale.",
+        wrong: [
+          "Nu există o interdicție generală asupra service-urilor.",
+          "Culoarea mașinii nu are relevanță.",
+          "UE poate adopta norme tehnice pentru piața unică, dar asta nu înseamnă interdicții absurde."
+        ],
+        source: "EDMO - EU Elections Disinfo Bulletin."
+      },
+      {
+        theme: "Încălzire și sobe",
+        question: "O afirmație virală spune: „UE interzice încălzirea cu lemne în toate gospodăriile”. Care variantă este corectă?",
+        answers: [
+          "Fals sau înșelător: există reguli privind poluarea și eficiența unor echipamente, dar nu o interdicție generală de a încălzi locuințe cu lemne.",
+          "Adevărat: toate sobele trebuie distruse imediat.",
+          "Adevărat: UE a interzis focul în gospodării.",
+          "Fals, pentru că poluarea aerului nu este o temă publică în UE."
+        ],
+        correct: 0,
+        explanation: "Mesajul transformă standarde tehnice și obiective de calitate a aerului într-o poveste emoțională despre pierderea controlului asupra casei.",
+        wrong: [
+          "Nu există o obligație generală de distrugere imediată a sobelor.",
+          "Formularea este absurdă și nu reflectă politici reale.",
+          "Calitatea aerului este într-adevăr o temă de politică publică în UE."
+        ],
+        source: "EDMO - EU Elections Disinfo Bulletin; Comisia Europeană - climate disinformation."
+      },
+      {
+        theme: "Carne și alimentație",
+        question: "Ce este corect despre afirmația „UE va interzice carnea și va obliga oamenii să mănânce insecte”?",
+        answers: [
+          "Este o narațiune falsă: UE poate autoriza alimente noi dacă sunt evaluate ca sigure, dar nu obligă oamenii să le consume și nu interzice carnea.",
+          "Este adevărată: meniurile cetățenilor sunt stabilite direct de Comisia Europeană.",
+          "Este adevărată doar pentru elevi și studenți.",
+          "Este falsă pentru că UE nu are nicio regulă de siguranță alimentară."
+        ],
+        correct: 0,
+        explanation: "Autorizarea unui produs alimentar nu echivalează cu obligarea consumatorilor să îl cumpere sau cu eliminarea altor produse.",
+        wrong: [
+          "Comisia nu stabilește meniuri individuale.",
+          "Nu există o categorie de cetățeni obligată să consume astfel de alimente.",
+          "UE are reguli de siguranță alimentară foarte dezvoltate."
+        ],
+        source: "Comisia Europeană / EFSA - Novel foods; Climate disinformation."
+      },
+      {
+        theme: "Agricultură",
+        question: "Care afirmație despre fermieri și UE este cea mai corectă?",
+        answers: [
+          "UE reglementează agricultura și finanțează fermierii prin PAC; dezbaterile reale nu înseamnă că „Bruxelles vrea să distrugă fermierii”.",
+          "UE nu oferă niciun ban agriculturii.",
+          "UE a interzis toate fermele de familie.",
+          "UE permite agricultură doar în statele fondatoare."
+        ],
+        correct: 0,
+        explanation: "Dezinformarea folosește frustrări reale ale fermierilor și le transformă în concluzii extreme.",
+        wrong: [
+          "PAC este un instrument major de finanțare.",
+          "Fermele de familie nu sunt interzise.",
+          "Agricultura este susținută în toate statele membre."
+        ],
+        source: "Comisia Europeană - Common Agricultural Policy; EFCSN - farmers protests and climate misinformation."
+      },
+      {
+        theme: "Defrișări și comerț",
+        question: "Ce urmărește Regulamentul UE privind produsele care nu provin din defrișări (EUDR)?",
+        answers: [
+          "Să reducă intrarea pe piața UE a unor produse legate de defrișări, prin trasabilitate și due diligence.",
+          "Să interzică orice cafea, cacao, lemn sau cauciuc în Europa.",
+          "Să oblige consumatorii să raporteze fiecare ciocolată cumpărată.",
+          "Să elimine competiția și să închidă piața unică."
+        ],
+        correct: 0,
+        explanation: "Ideea centrală a EUDR este trasabilitatea lanțurilor de aprovizionare și reducerea produselor legate de defrișări.",
+        wrong: [
+          "Regula nu interzice categoriile de produse, ci cere conformitate cu criterii de defrișare.",
+          "Obligațiile vizează operatori și comercianți, nu consumatori individuali la casa de marcat.",
+          "Scopul declarat este sustenabilitatea lanțurilor comerciale."
+        ],
+        source: "Comisia Europeană - EUDR Myth Buster."
+      },
+      {
+        theme: "Migrație",
+        question: "O știre susține: „UE obligă România să primească un număr nelimitat de migranți”. Care este cel mai bun răspuns?",
+        answers: [
+          "Fals: politicile UE de azil și migrație au reguli, proceduri și mecanisme de solidaritate, nu o obligație nelimitată și arbitrară.",
+          "Adevărat: orice persoană din lume primește automat cetățenie UE.",
+          "Adevărat: statele membre nu mai au nicio autoritate administrativă.",
+          "Fals, pentru că migrația nu este niciodată reglementată la nivel european."
+        ],
+        correct: 0,
+        explanation: "Realitatea este mai tehnică: proceduri de azil, frontiere, solidaritate și responsabilitate.",
+        wrong: [
+          "Azilul, rezidența și cetățenia sunt lucruri diferite.",
+          "Statele membre păstrează roluri administrative și competențe importante.",
+          "UE are politici comune privind azilul, frontierele și migrația."
+        ],
+        source: "Parlamentul European - impactul dezinformării despre migranți; Comisia Europeană - Migration and asylum pact."
+      },
+      {
+        theme: "Schengen",
+        question: "Care afirmație despre Schengen este corectă?",
+        answers: [
+          "Schengen reduce controalele sistematice la frontierele interne pentru statele participante, dar nu elimină frontierele externe, poliția sau regulile de securitate.",
+          "Schengen înseamnă că nu mai există niciun control legal în Europa.",
+          "Schengen înseamnă că toate statele UE sunt automat în aceeași situație, fără excepții.",
+          "Schengen este un program secret de schimbare a pașapoartelor cu cipuri de urmărire."
+        ],
+        correct: 0,
+        explanation: "Schengen are frontiere externe, cooperare polițienească și condiții tehnice.",
+        wrong: [
+          "Controalele pot exista în anumite condiții, iar frontierele externe contează.",
+          "Participarea și aplicarea pot varia între state.",
+          "Este o teorie conspiraționistă fără bază instituțională."
+        ],
+        source: "Comisia Europeană - Schengen area."
+      },
+      {
+        theme: "Fonduri europene",
+        question: "Care este cea mai bună explicație pentru afirmația „fondurile europene sunt bani gratis, fără reguli”?",
+        answers: [
+          "Fals: fondurile UE au obiective, criterii, contracte, audit, raportare și posibile corecții financiare.",
+          "Adevărat: UE virează bani fără documente și fără verificări.",
+          "Adevărat doar pentru universități.",
+          "Fals, pentru că UE nu finanțează niciun proiect local."
+        ],
+        correct: 0,
+        explanation: "Finanțarea UE vine cu reguli de eligibilitate, achiziții, raportare și control.",
+        wrong: [
+          "Proiectele sunt evaluate și auditate.",
+          "Regulile nu depind doar de tipul beneficiarului.",
+          "UE finanțează numeroase proiecte locale, regionale, educaționale și de infrastructură."
+        ],
+        source: "Comisia Europeană - EU funding, grants and tenders; OLAF / EPPO information."
+      },
+      {
+        theme: "Suveranitate",
+        question: "Ce este problematic în afirmația „UE a anulat complet suveranitatea statelor membre”?",
+        answers: [
+          "Exagerează: statele au transferat competențe prin tratate, dar păstrează guverne, parlamente, constituții și competențe importante.",
+          "Este perfect adevărată: primarii sunt numiți de Comisia Europeană.",
+          "Este adevărată doar pentru țările mici.",
+          "Este falsă pentru că UE nu are nicio competență reală."
+        ],
+        correct: 0,
+        explanation: "UE funcționează pe competențe atribuite prin tratate; unele domenii sunt comune sau partajate, altele rămân naționale.",
+        wrong: [
+          "Autoritățile locale și naționale sunt alese sau numite conform dreptului intern.",
+          "Tratatele se aplică tuturor statelor membre, cu particularități.",
+          "UE are competențe reale în domenii precum piața internă, concurența, comerțul sau mediul."
+        ],
+        source: "Tratatul privind Uniunea Europeană; Comisia Europeană - how the EU works."
+      },
+      {
+        theme: "Parlamentul European",
+        question: "Care afirmație despre Parlamentul European este corectă?",
+        answers: [
+          "Este ales direct de cetățenii UE și participă la adoptarea legislației europene alături de Consiliu în multe domenii.",
+          "Este format din funcționari numiți pe viață de Comisie.",
+          "Nu are niciun rol legislativ.",
+          "Votează legi secrete care nu pot fi citite public."
+        ],
+        correct: 0,
+        explanation: "Eurodeputații sunt aleși direct, iar activitatea legislativă este publică.",
+        wrong: [
+          "Membrii Parlamentului European sunt aleși prin alegeri europene.",
+          "Parlamentul are rol legislativ și bugetar.",
+          "Documentele legislative sunt publice în mare măsură, chiar dacă procesul poate fi dificil de urmărit."
+        ],
+        source: "Parlamentul European - powers and procedures."
+      },
+      {
+        theme: "Alegeri și deepfake",
+        question: "De ce pot fi deepfake-urile periculoase în alegerile europene?",
+        answers: [
+          "Pentru că pot produce imagini, voci sau videoclipuri false care par reale și pot manipula încrederea alegătorilor.",
+          "Pentru că orice videoclip online este automat deepfake.",
+          "Pentru că UE folosește deepfake-uri ca metodă oficială de vot.",
+          "Pentru că doar persoanele în vârstă pot fi păcălite de ele."
+        ],
+        correct: 0,
+        explanation: "Conținutul audio-video manipulat poate afecta încrederea alegătorilor și poate circula rapid în contexte electorale.",
+        wrong: [
+          "Majoritatea videoclipurilor nu sunt automat deepfake.",
+          "Votul nu se bazează pe deepfake-uri.",
+          "Și tinerii digital-savvy pot supraestima capacitatea de a identifica manipularea."
+        ],
+        source: "Parlamentul European - disinformation and elections; OECD - Facts not Fakes."
+      },
+      {
+        theme: "Sănătate",
+        question: "Care afirmație despre dezinformarea în sănătate este corectă?",
+        answers: [
+          "Poate produce prejudicii reale, pentru că oamenii pot lua decizii medicale sau sociale pe baza unor informații false.",
+          "Nu contează, pentru că sănătatea este doar o opinie.",
+          "Este imposibilă în UE, pentru că toate platformele sunt verificate manual de medici.",
+          "Apare doar în pandemii, niciodată în alte contexte."
+        ],
+        correct: 0,
+        explanation: "Manipularea informațiilor despre sănătate poate afecta decizii individuale și sănătatea publică.",
+        wrong: [
+          "Sănătatea publică se bazează pe dovezi, nu doar pe opinii.",
+          "Platformele nu sunt verificate manual integral de medici.",
+          "Poate apărea și în vaccinare, tratamente, nutriție, boli transmisibile și sănătate digitală."
+        ],
+        source: "Comisia Europeană - Health information manipulation; Fighting coronavirus disinformation."
+      },
+      {
+        theme: "Vaccinuri și UE",
+        question: "O postare spune: „UE a ascuns că vaccinurile modifică ADN-ul tuturor cetățenilor”. Ce întrebare critică ar trebui pusă prima?",
+        answers: [
+          "Care este sursa afirmației, ce dovezi verificabile oferă și ce spun instituțiile medicale independente?",
+          "Câte emoji are postarea?",
+          "Cine a distribuit-o primul în grupul de clasă?",
+          "Dacă sună înfricoșător, înseamnă automat că e adevărat?"
+        ],
+        correct: 0,
+        explanation: "Educația media cere verificarea sursei, dovezilor, expertizei și consensului instituțiilor competente.",
+        wrong: [
+          "Emoji-urile pot indica stil emoțional, dar nu verifică faptele.",
+          "Primul distribuitor nu este neapărat sursă credibilă.",
+          "Emoția puternică este tocmai un semnal că trebuie verificat conținutul."
+        ],
+        source: "Parlamentul European - How to spot fake news; Comisia Europeană - Fighting coronavirus disinformation."
+      },
+      {
+        theme: "Extinderea UE",
+        question: "Care este răspunsul corect la afirmația „orice țară poate intra în UE peste noapte dacă Bruxelles vrea”?",
+        answers: [
+          "Fals: aderarea presupune criterii, negocieri, reforme și acordul statelor membre.",
+          "Adevărat: Comisia poate adăuga un stat membru printr-un comunicat de presă.",
+          "Adevărat doar pentru țările vecine cu România.",
+          "Fals, pentru că UE nu se mai poate extinde niciodată."
+        ],
+        correct: 0,
+        explanation: "Extinderea este un proces politic și tehnic complex, nu o decizie unilaterală instantanee.",
+        wrong: [
+          "Aderarea cere proceduri formale și ratificări.",
+          "Vecinătatea geografică nu înlocuiește criteriile de aderare.",
+          "Extinderea rămâne posibilă, dar condiționată."
+        ],
+        source: "Comisia Europeană - EU enlargement policy."
+      },
+      {
+        theme: "Ucraina și aderarea",
+        question: "Ce este fals în afirmația „Ucraina este deja membră UE și primește automat toate drepturile unui stat membru”?",
+        answers: [
+          "Ucraina are statut de țară candidată, dar aderarea deplină cere negocieri și îndeplinirea criteriilor.",
+          "Nimic: statutul de candidat este identic cu statutul de membru.",
+          "Nimic: orice țară care primește ajutor UE devine stat membru.",
+          "Este falsă doar pentru că Ucraina nu este în Europa."
+        ],
+        correct: 0,
+        explanation: "Statutul de candidat este o etapă politică importantă, dar nu conferă automat drepturile și obligațiile unui stat membru.",
+        wrong: [
+          "Candidat și membru sunt statute diferite.",
+          "Ajutorul financiar sau umanitar nu echivalează cu aderarea.",
+          "Problema este statutul juridic și procesul de aderare."
+        ],
+        source: "Consiliul UE / Comisia Europeană - Ukraine candidate status and enlargement."
+      },
+      {
+        theme: "Euro și identitate națională",
+        question: "Care afirmație despre adoptarea euro este corectă?",
+        answers: [
+          "Statele care aderă la zona euro trebuie să îndeplinească criterii de convergență; procesul nu se reduce la „Bruxelles ne ia moneda mâine”.",
+          "Comisia Europeană schimbă moneda oricărui stat într-o noapte.",
+          "Adoptarea euro înseamnă interzicerea limbii naționale.",
+          "Euro este folosit doar pentru a finanța propaganda electorală."
+        ],
+        correct: 0,
+        explanation: "Adoptarea euro are criterii economice și proceduri instituționale.",
+        wrong: [
+          "Adoptarea euro are criterii, rapoarte și decizii formale.",
+          "Moneda nu determină limba națională.",
+          "Euro este moneda comună a zonei euro, nu un instrument electoral în sine."
+        ],
+        source: "BCE / Comisia Europeană - convergence criteria and euro adoption."
+      },
+      {
+        theme: "Reguli alimentare absurde",
+        question: "De ce prind ușor fake news-urile de tip „UE reglementează curbura bananelor”?",
+        answers: [
+          "Pentru că pornesc de la existența unor standarde comerciale reale, apoi le caricaturizează ca dovadă că UE se ocupă de lucruri ridicole.",
+          "Pentru că toate sunt complet adevărate și nimeni nu le-a verificat.",
+          "Pentru că UE nu are standarde comerciale, deci orice afirmație e credibilă.",
+          "Pentru că forma fructelor stabilește rezultatul alegerilor europene."
+        ],
+        correct: 0,
+        explanation: "Multe euromituri amestecă un sâmbure de realitate tehnică cu o concluzie falsă sau ridicolă.",
+        wrong: [
+          "Multe au fost verificate și demontate.",
+          "Standardele comerciale există, dar nu justifică exagerările.",
+          "Este o absurditate, utilă doar ca exemplu de deraiere logică."
+        ],
+        source: "Comisia Europeană / fact-checking european - euromyths; materiale media literacy UE."
+      },
+      {
+        theme: "Manipularea emoțională",
+        question: "Care semnal ar trebui să te facă prudent când vezi o „știre” despre UE?",
+        answers: [
+          "Titlul folosește panică maximă, nu indică surse, cere distribuire urgentă și reduce o politică tehnică la „Bruxelles îți fură viața”.",
+          "Textul include link către documente oficiale și explică limitele afirmației.",
+          "Autorul corectează public o eroare dintr-o versiune anterioară.",
+          "Articolul separă clar opinia de fapte."
+        ],
+        correct: 0,
+        explanation: "Manipularea folosește adesea emoții puternice, urgență, dușmani simpli și lipsă de surse verificabile.",
+        wrong: [
+          "Linkurile la documente oficiale pot crește verificabilitatea.",
+          "Corectarea transparentă a erorilor este o practică jurnalistică sănătoasă.",
+          "Separarea opiniei de fapte este un indicator bun."
+        ],
+        source: "Parlamentul European - How to spot fake news; OECD - Facts not Fakes."
+      },
+      {
+        theme: "Platforme și reclame politice",
+        question: "De ce contează transparența reclamelor politice online în UE?",
+        answers: [
+          "Pentru că alegătorii trebuie să știe cine încearcă să îi influențeze, cu ce mesaj și prin ce targetare.",
+          "Pentru că toate reclamele politice sunt automat fake news.",
+          "Pentru că UE vrea să interzică orice campanie electorală.",
+          "Pentru că doar reclamele de pe afișe stradale pot manipula."
+        ],
+        correct: 0,
+        explanation: "Transparența ajută alegătorii să înțeleagă cine comunică, ce mesaj transmite și prin ce metode de targetare.",
+        wrong: [
+          "Publicitatea politică poate fi legală și legitimă; problema este opacitatea sau manipularea.",
+          "Scopul nu este interzicerea campaniilor, ci reguli mai transparente.",
+          "Manipularea poate apărea puternic în mediul digital."
+        ],
+        source: "Comisia Europeană - Code of Practice / Code of Conduct on Disinformation; Digital Services Act."
+      },
+      {
+        theme: "Gândire critică europeană",
+        question: "Care este cea mai bună reacție când vezi o afirmație șocantă despre UE?",
+        answers: [
+          "O verific din cel puțin două surse credibile, caut documentul original și mă întreb cine câștigă dacă eu o distribui imediat.",
+          "O distribui repede, ca să fiu primul.",
+          "Cred automat orice e anti-UE, pentru că sună curajos.",
+          "Cred automat orice e pro-UE, pentru că instituțiile nu greșesc niciodată."
+        ],
+        correct: 0,
+        explanation: "Scopul educației media nu este să crezi automat o parte, ci să verifici afirmații, surse, dovezi, context și interese.",
+        wrong: [
+          "Urgența artificială este o tehnică de viralizare.",
+          "Scepticismul autentic nu înseamnă credulitate selectivă.",
+          "Încrederea democratică sănătoasă include verificare și critică argumentată."
+        ],
+        source: "Parlamentul European - How to spot fake news; Comisia Europeană - media literacy / countering manipulation."
+      }
+    ];
+
+    const state = {
+      index: 0,
+      answers: Array(questions.length).fill(null),
+      muted: false,
+      audio: null
+    };
+
+    const $ = (id) => document.getElementById(id);
+    const letters = ["A", "B", "C", "D"];
+
+    function initFlag() {
+      const flag = $("flag");
+      for (let i = 0; i < 12; i++) {
+        const star = document.createElement("span");
+        star.className = "star";
+        const angle = (i / 12) * Math.PI * 2;
+        const x = Math.cos(angle) * 17;
+        const y = Math.sin(angle) * 13;
+        star.style.transform = `translate(${x}px, ${y}px)`;
+        flag.appendChild(star);
+      }
+    }
+
+    function initDots() {
+      const dots = $("dots");
+      dots.innerHTML = "";
+      questions.forEach((_, index) => {
+        const btn = document.createElement("button");
+        btn.className = "dot";
+        btn.textContent = String(index + 1).padStart(2, "0");
+        btn.addEventListener("click", () => {
+          state.index = index;
+          playTone(520, 0.04, "sine");
+          render();
+        });
+        dots.appendChild(btn);
+      });
+    }
+
+    function playTone(freq, duration, type = "triangle") {
+      if (state.muted) return;
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return;
+      if (!state.audio) state.audio = new AudioContext();
+      const ctx = state.audio;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = type;
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.08, ctx.currentTime + 0.012);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + duration + 0.02);
+    }
+
+    function selectAnswer(choice) {
+      const q = questions[state.index];
+      if (state.answers[state.index] !== null) return;
+      state.answers[state.index] = choice;
+      if (choice === q.correct) {
+        playTone(740, 0.12, "triangle");
+        setTimeout(() => playTone(980, 0.1, "triangle"), 90);
+      } else {
+        playTone(180, 0.16, "sawtooth");
+      }
+      render();
+    }
+
+    function render() {
+      const q = questions[state.index];
+      const selected = state.answers[state.index];
+      const answered = state.answers.filter((value) => value !== null).length;
+      const correct = state.answers.reduce((sum, value, idx) => sum + (value === questions[idx].correct ? 1 : 0), 0);
+      const percent = answered ? Math.round((correct / answered) * 100) : 0;
+
+      $("questionIndex").textContent = `${String(state.index + 1).padStart(2, "0")} / ${questions.length}`;
+      $("themeLabel").textContent = `${String(state.index + 1).padStart(2, "0")} · ${q.theme}`;
+      $("headline").textContent = q.theme;
+      $("questionText").textContent = q.question;
+      $("answeredCount").textContent = answered;
+      $("correctCount").textContent = correct;
+      $("scorePercent").textContent = percent;
+      $("progressBar").style.width = `${(answered / questions.length) * 100}%`;
+      $("sourceText").textContent = q.source;
+      $("scoreNote").textContent = answered ? `${answered} din ${questions.length} întrebări au răspunsuri.` : "Alege un răspuns pentru a vedea explicația.";
+      $("topline").textContent = selected === null ? "Alege varianta cea mai solidă factual." : "Analizează explicațiile, apoi mergi mai departe.";
+      $("prevBtn").disabled = state.index === 0;
+      $("nextBtn").textContent = state.index === questions.length - 1 ? "Vezi rezultatele →" : "Următoarea întrebare →";
+      $("soundBtn").textContent = state.muted ? "♩" : "♪";
+
+      const dots = [...$("dots").children];
+      dots.forEach((dot, idx) => {
+        dot.className = "dot";
+        if (idx === state.index) dot.classList.add("active");
+        if (state.answers[idx] !== null) dot.classList.add("done");
+      });
+
+      const answers = $("answers");
+      answers.innerHTML = "";
+      q.answers.forEach((text, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "answer";
+        if (selected !== null) {
+          if (idx === q.correct) btn.classList.add("correct");
+          if (idx === selected && idx !== q.correct) btn.classList.add("wrong");
+          if (idx === selected) btn.classList.add("selected");
+        }
+        btn.innerHTML = `<span class="letter">${letters[idx]}</span><span>${text}</span>`;
+        btn.addEventListener("click", () => selectAnswer(idx));
+        answers.appendChild(btn);
+      });
+
+      const explainer = $("explainer");
+      explainer.classList.toggle("show", selected !== null);
+      if (selected !== null) {
+        const isGood = selected === q.correct;
+        $("verdict").className = `verdict ${isGood ? "good" : "bad"}`;
+        $("verdict").textContent = isGood ? "Corect · verificare solidă" : "Atenție · capcană de formulare";
+        $("correctExplanation").textContent = `Răspuns corect: A. ${q.explanation}`;
+        $("wrongList").innerHTML = q.wrong.map((item, idx) => `<div class="wrong-note"><strong>${letters[idx + 1]}.</strong> ${item}</div>`).join("");
+      }
+    }
+
+    function showResults() {
+      const answered = state.answers.filter((value) => value !== null).length;
+      const correct = state.answers.reduce((sum, value, idx) => sum + (value === questions[idx].correct ? 1 : 0), 0);
+      const percent = answered ? Math.round((correct / questions.length) * 100) : 0;
+      $("resultsTitle").textContent = `${correct}/${questions.length} corecte`;
+      $("resultsCopy").textContent = answered === questions.length
+        ? `Scor final: ${percent}%. Discuția bună începe acum: ce tip de manipulare a fost cel mai greu de detectat?`
+        : `Ai răspuns la ${answered} din ${questions.length}. Poți continua de unde ai rămas sau poți folosi raportul ca hartă rapidă de recapitulare.`;
+      $("reviewGrid").innerHTML = questions.map((q, idx) => {
+        const value = state.answers[idx];
+        const status = value === null ? "" : value === q.correct ? "good" : "bad";
+        return `<div class="review-cell ${status}">${String(idx + 1).padStart(2, "0")}</div>`;
+      }).join("");
+      $("results").classList.add("show");
+      playTone(620, 0.08, "sine");
+      setTimeout(() => playTone(820, 0.1, "sine"), 80);
+    }
+
+    function resetQuiz() {
+      state.answers = Array(questions.length).fill(null);
+      state.index = 0;
+      $("results").classList.remove("show");
+      playTone(320, 0.08, "triangle");
+      render();
+    }
+
+    $("prevBtn").addEventListener("click", () => {
+      state.index = Math.max(0, state.index - 1);
+      playTone(420, 0.05, "sine");
+      render();
+    });
+
+    $("nextBtn").addEventListener("click", () => {
+      if (state.index === questions.length - 1) {
+        showResults();
+        return;
+      }
+      state.index = Math.min(questions.length - 1, state.index + 1);
+      playTone(560, 0.05, "sine");
+      render();
+    });
+
+    $("resetBtn").addEventListener("click", resetQuiz);
+    $("finishBtn").addEventListener("click", showResults);
+    $("closeResults").addEventListener("click", () => $("results").classList.remove("show"));
+    $("restartFromResults").addEventListener("click", resetQuiz);
+    $("soundBtn").addEventListener("click", () => {
+      state.muted = !state.muted;
+      if (!state.muted) playTone(700, 0.08, "sine");
+      render();
+    });
+
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowRight") $("nextBtn").click();
+      if (event.key === "ArrowLeft") $("prevBtn").click();
+      if (["1", "2", "3", "4"].includes(event.key)) selectAnswer(Number(event.key) - 1);
+      if (event.key === "Escape") $("results").classList.remove("show");
+    });
+
+    initFlag();
+    initDots();
+    render();
+  </script>
+</body>
+</html>
